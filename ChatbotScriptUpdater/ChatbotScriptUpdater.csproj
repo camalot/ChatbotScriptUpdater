@@ -104,9 +104,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="app.ico" />
-    <Content Include="ChatbotUpdater.py">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
