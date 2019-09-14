@@ -60,8 +60,8 @@ def OpenScriptUpdater():
             "kill": [], # Array of process names to stop
             "execute": {
               "before": [{
-								"command": "del",
-								"arguments": [ "/f", "/q", "/s", "*" ],
+								"command": "cmd",
+								"arguments": [ "/c", "del /f /q /s *" ],
 								"workingDirectory": "${PATH}\\${SCRIPT}\\Libs\\",
 								"ignoreExitCode": true,
 								"validExitCodes":  [0]
