@@ -3,53 +3,36 @@ skip_tags: true
 image: Visual Studio 2019
 before_build:
 - ps: >-
+    $rootLocation = ((Get-Item Env:\APPVEYOR_BUILD_FOLDER).Value);
+    Set-Location $rootLocation | Out-Null;
     nuget restore
     $rootLocation = ((Get-Item Env:\APPVEYOR_BUILD_FOLDER).Value);
-
-    $trunk = "$rootLocation\ChatbotScriptUpdater";
-
-    $ignore = Set-Location $trunk;
-
+    Set-Location $rootLocation\ChatbotScriptUpdater | Out-Null;
     ..\Build\appveyor.before-build.ps1
-
-    $ignore = Set-Location $rootLocation;
+    Set-Location $rootLocation | Out-Null;
 build:
   verbosity: minimal
 before_package:
 - ps: >-
     $rootLocation = ((Get-Item Env:\APPVEYOR_BUILD_FOLDER).Value);
-
-    $trunk = "$rootLocation\ChatbotScriptUpdater
-    $ignore = Set-Location $trunk;
-
+		Set-Location $rootLocation\ChatbotScriptUpdater | Out-Null;
     ..\Build\appveyor.before-package.ps1
-
-    $ignore = Set-Location $rootLocation;
+    Set-Location $rootLocation | Out-Null;
 after_build:
 - ps: >-
     $rootLocation = ((Get-Item Env:\APPVEYOR_BUILD_FOLDER).Value);
-
-    $trunk = "$rootLocation\ChatbotScriptUpdater";
-
-    $ignore = Set-Location $trunk;
-
+    Set-Location "$rootLocation\ChatbotScriptUpdater" | Out-Null;
     ..\Build\appveyor.after-build.ps1
-
-    $ignore = Set-Location $rootLocation;
+    Set-Location $rootLocation | Out-Null;
 artifacts:
 - path: '**\deps\*.zip'
   name: Zips
 before_deploy:
 - ps: >-
     $rootLocation = ((Get-Item Env:\APPVEYOR_BUILD_FOLDER).Value);
-
-    $trunk = "$rootLocation\ChatbotScriptUpdater";
-
-    $ignore = Set-Location $trunk;
-
+    Set-Location $rootLocation\ChatbotScriptUpdater | Out-Null;
     ..\Build\appveyor.before-deployment.ps1
-
-    $ignore = Set-Location $rootLocation;
+    Set-Location $rootLocation | Out-Null;
 deploy:
 - provider: GitHub
   auth_token:
@@ -61,11 +44,6 @@ deploy:
 after_deploy:
 - ps: >-
     $rootLocation = ((Get-Item Env:\APPVEYOR_BUILD_FOLDER).Value);
-
-    $trunk = "$rootLocation\ChatbotScriptUpdater";
-
-    $ignore = Set-Location $trunk;
-
+		Set-Location $rootLocation\ChatbotScriptUpdater | Out-Null;
     ..\Build\appveyor.after-deployment.ps1
-
-    $ignore = Set-Location $rootLocation;
+    Set-Location $rootLocation | Out-Null;
