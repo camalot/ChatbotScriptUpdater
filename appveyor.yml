@@ -3,13 +3,14 @@ skip_tags: true
 image: Visual Studio 2019
 before_build:
 - ps: >-
+		nuget restore
     $rootLocation = ((Get-Item Env:\APPVEYOR_BUILD_FOLDER).Value);
 
     $trunk = "$rootLocation\ChatbotScriptUpdater";
 
     $ignore = Set-Location $trunk;
 
-    .\Build\appveyor.before-build.ps1
+    ..\Build\appveyor.before-build.ps1
 
     $ignore = Set-Location $rootLocation;
 build:
@@ -21,7 +22,7 @@ before_package:
     $trunk = "$rootLocation\ChatbotScriptUpdater
     $ignore = Set-Location $trunk;
 
-    .\Build\appveyor.before-package.ps1
+    ..\Build\appveyor.before-package.ps1
 
     $ignore = Set-Location $rootLocation;
 after_build:
@@ -32,7 +33,7 @@ after_build:
 
     $ignore = Set-Location $trunk;
 
-    .\Build\appveyor.after-build.ps1
+    ..\Build\appveyor.after-build.ps1
 
     $ignore = Set-Location $rootLocation;
 artifacts:
@@ -46,7 +47,7 @@ before_deploy:
 
     $ignore = Set-Location $trunk;
 
-    .\Build\appveyor.before-deployment.ps1
+    ..\Build\appveyor.before-deployment.ps1
 
     $ignore = Set-Location $rootLocation;
 deploy:
@@ -65,6 +66,6 @@ after_deploy:
 
     $ignore = Set-Location $trunk;
 
-    .\Build\appveyor.after-deployment.ps1
+    ..\Build\appveyor.after-deployment.ps1
 
     $ignore = Set-Location $rootLocation;
