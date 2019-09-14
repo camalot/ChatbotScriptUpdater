@@ -12,6 +12,16 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Root", "Root", "{543B5B98-4
 		Readme.md = Readme.md
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{6E437E17-9958-42A1-AA06-3D0D3072C721}"
+	ProjectSection(SolutionItems) = preProject
+		Build\appveyor.after-build.ps1 = Build\appveyor.after-build.ps1
+		Build\appveyor.after-deployment.ps1 = Build\appveyor.after-deployment.ps1
+		Build\appveyor.before-build.ps1 = Build\appveyor.before-build.ps1
+		Build\appveyor.before-deployment.ps1 = Build\appveyor.before-deployment.ps1
+		Build\appveyor.before-package.ps1 = Build\appveyor.before-package.ps1
+		appveyor.yml = appveyor.yml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

@@ -8,6 +8,7 @@ using System.Security.Principal;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using ChatbotScriptUpdater;
+using ChatbotScriptUpdater.Extensions;
 
 namespace ChatbotScriptUpdaterss {
 	static class Program {
