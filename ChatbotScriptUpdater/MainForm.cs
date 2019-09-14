@@ -18,21 +18,14 @@ using ChatbotScriptUpdater.Github;
 namespace ChatbotScriptUpdater {
 	public partial class MainForm : Form {
 
-
-		// Copy Updater To Temp Directory
-		// Create Config File With Data About Chatbot Location
-		// Run Updater
-		// IF UPDATE:
-		//		Close Down Chatbot
-		//		Download new Version
-		//		Extract Update To Script Directory
-		//		Reopen Chatbot
-
 		public MainForm ( ) {
+
+
 			Updater = new ScriptUpdater ( );
 			Updater.BeginUpdateCheck += Updater_BeginUpdateCheck;
 			Updater.EndUpdateCheck += Updater_EndUpdateCheck;
 			Updater.Error += Updater_Error;
+
 			Configuration = new ScriptUpdater.Configuration {
 				Version = "0.0.0",
 				Repository = null
@@ -42,6 +35,8 @@ namespace ChatbotScriptUpdater {
 			InitializeComponent ( );
 			this.statusLabel.Text = "";
 		}
+
+		public string UpdateFile { get; set; } = "update.manifest";
 
 		private void Updater_Error ( object sender, System.IO.ErrorEventArgs e ) {
 			this.statusLabel.Text = e.GetException ( ).Message;
@@ -192,26 +187,27 @@ namespace ChatbotScriptUpdater {
 					}
 					progress.Value = 30;
 
-					progressLabel.Text = "Shutting Down Chatbot";
-					ShutdownChatbotProcess ( );
-					progress.Value = 45;
+					if ( Configuration.RequiresRestart ) {
+						progressLabel.Text = "Shutting Down Chatbot";
+						ShutdownChatbotProcess ( );
 
-					progressLabel.Text = "Waiting for Chatbot to exit ";
-					var waitMax = 150;
-					var cnt = 0;
-					while ( true ) {
-						if ( cnt++ > waitMax ) {
-							throw new TimeoutException ( "Timeout while waiting for Streamlabs Chatbot to exit" );
-						}
-						System.Diagnostics.Process[] processList = System.Diagnostics.Process.GetProcessesByName ( "Streamlabs Chatbot" );
-						if ( processList.Length > 0 ) {
-							progressLabel.Text = $"Waiting for Chatbot to exit {SpinText ( cnt )}";
-							Thread.Sleep ( 100 );
-						} else {
-							break;
+						progressLabel.Text = "Waiting for Chatbot to exit ";
+						var waitMax = 150;
+						var cnt = 0;
+						while ( true ) {
+							if ( cnt++ > waitMax ) {
+								throw new TimeoutException ( "Timeout while waiting for Streamlabs Chatbot to exit" );
+							}
+							System.Diagnostics.Process[] processList = System.Diagnostics.Process.GetProcessesByName ( "Streamlabs Chatbot" );
+							if ( processList.Length > 0 ) {
+								progressLabel.Text = $"Waiting for Chatbot to exit {SpinText ( cnt )}";
+								Thread.Sleep ( 100 );
+							} else {
+								break;
+							}
 						}
 					}
-
+					progress.Value = 45;
 
 					progressLabel.Text = "Running Before Extraction Scripts";
 					foreach ( var command in Configuration.Execute.Before ) {
@@ -234,8 +230,11 @@ namespace ChatbotScriptUpdater {
 
 					progress.Value = 90;
 
-					progressLabel.Text = "Restarting Streamlabs Chatbot";
-					RestartChatbotProcess ( );
+					if ( Configuration.RequiresRestart ) {
+						progressLabel.Text = "Restarting Streamlabs Chatbot";
+						RestartChatbotProcess ( );
+					}
+
 					progress.Value = 100;
 
 					this.statusLabel.Text = $"Update to {this.UpdateStatus.LatestVersion} Completed Successfully";

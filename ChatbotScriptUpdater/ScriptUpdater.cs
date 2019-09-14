@@ -24,6 +24,8 @@ namespace ChatbotScriptUpdater {
 			public string Name { get; set; }
 			[JsonProperty ( "chatbot" )]
 			public string Chatbot { get; set; }
+			[JsonProperty ( "requiresRestart" )]
+			public bool RequiresRestart { get; set; } = false;
 			[JsonProperty ( "website" )]
 			public string Website { get; set; }
 			[JsonProperty ( "repository" )]
@@ -78,9 +80,8 @@ namespace ChatbotScriptUpdater {
 
 		public bool HasError { get; set; }
 
-		public Configuration GetConfiguration ( ) {
+		public Configuration GetConfiguration ( string file = "update.manifest" ) {
 			var path = Path.GetDirectoryName ( Assembly.GetExecutingAssembly ( ).Location );
-			var file = "chatbot.json";
 			var fullPath = Path.Combine ( path, file );
 			if ( File.Exists ( fullPath ) ) {
 				using ( var fr = new StreamReader ( fullPath ) ) {

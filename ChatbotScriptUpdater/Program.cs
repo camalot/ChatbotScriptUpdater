@@ -16,11 +16,18 @@ namespace ChatbotScriptUpdaterss {
 		/// </summary>
 		[STAThread]
 		static void Main ( string[] args ) {
+
+			var arguments = new Arguments ( args );
 			Application.EnableVisualStyles ( );
 			var StartUpDir = Application.StartupPath;
 			Console.WriteLine ( StartUpDir );
 			Application.SetCompatibleTextRenderingDefault ( false );
 			var mainForm = new MainForm ( );
+			var fileArgs = new[] { "file", "f", "config", "configFile" };
+			if(arguments.ContainsKey( fileArgs ) ) {
+				mainForm.UpdateFile = arguments[fileArgs].Or ( "update.manifest" );
+			}
+
 			Application.Run ( mainForm );
 			
 			if ( StartUpDir.ToLowerInvariant().StartsWith ( Path.GetTempPath ( ).ToLowerInvariant ( ) ) ) {

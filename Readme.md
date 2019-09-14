@@ -19,7 +19,7 @@ This is an application that can be included with your streamlabs chatbot scripts
 		"wsevent": "EVENT_NONE"
 	}
 
-...
+	...
 }
 
 ```
@@ -50,12 +50,15 @@ def OpenScriptUpdater():
                 Parent.Log(ScriptName, "Copy: " + full_file_name)
                 shutil.copy(full_file_name, tempdir)
         updater = os.path.join(tempdir, "ChatbotScriptUpdater.exe")
-        updaterConfigFile = os.path.join(tempdir, "chatbot.json")
+        updaterConfigFile = os.path.join(tempdir, "update.manifest")
         repoVals = Repo.split('/')
+
+				# Create the update.manifest
         updaterConfig = {
             "path": os.path.realpath(os.path.join(currentDir,"../")),
             "version": Version,
             "name": ScriptName,
+						"requiresRestart": True, # Shutdown and restart Chatbot
             "chatbot": os.path.join(chatbotRoot, "Streamlabs Chatbot.exe"),
             "kill": [], # Array of process names to stop
             "execute": {
@@ -63,7 +66,7 @@ def OpenScriptUpdater():
 								"command": "cmd",
 								"arguments": [ "/c", "del /f /q /s *" ],
 								"workingDirectory": "${PATH}\\${SCRIPT}\\Libs\\",
-								"ignoreExitCode": true,
+								"ignoreExitCode": True,
 								"validExitCodes":  [0]
 							}], # commands to run before extraction
               "after": [] # command to run after extraction

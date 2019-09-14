@@ -62,8 +62,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Arguments.cs" />
     <Compile Include="Exceptions\NoConfigurationException.cs" />
     <Compile Include="Exceptions\UnableToLoadReleaseException.cs" />
+    <Compile Include="Extensions\OrValue.cs" />
     <Compile Include="Github\Release.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>

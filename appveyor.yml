@@ -1,0 +1,70 @@
+version: 1.0.{build}
+skip_tags: true
+image: Visual Studio 2019
+before_build:
+- ps: >-
+    $rootLocation = ((Get-Item Env:\APPVEYOR_BUILD_FOLDER).Value);
+
+    $trunk = "$rootLocation\ChatbotScriptUpdater";
+
+    $ignore = Set-Location $trunk;
+
+    .\Build\appveyor.before-build.ps1
+
+    $ignore = Set-Location $rootLocation;
+build:
+  verbosity: minimal
+before_package:
+- ps: >-
+    $rootLocation = ((Get-Item Env:\APPVEYOR_BUILD_FOLDER).Value);
+
+    $trunk = "$rootLocation\ChatbotScriptUpdater
+    $ignore = Set-Location $trunk;
+
+    .\Build\appveyor.before-package.ps1
+
+    $ignore = Set-Location $rootLocation;
+after_build:
+- ps: >-
+    $rootLocation = ((Get-Item Env:\APPVEYOR_BUILD_FOLDER).Value);
+
+    $trunk = "$rootLocation\ChatbotScriptUpdater";
+
+    $ignore = Set-Location $trunk;
+
+    .\Build\appveyor.after-build.ps1
+
+    $ignore = Set-Location $rootLocation;
+artifacts:
+- path: '**\deps\*.zip'
+  name: Zips
+before_deploy:
+- ps: >-
+    $rootLocation = ((Get-Item Env:\APPVEYOR_BUILD_FOLDER).Value);
+
+    $trunk = "$rootLocation\ChatbotScriptUpdater";
+
+    $ignore = Set-Location $trunk;
+
+    .\Build\appveyor.before-deployment.ps1
+
+    $ignore = Set-Location $rootLocation;
+deploy:
+- provider: GitHub
+  auth_token:
+    secure: UEgy2H9zJKLi599QoO3qVf5BKFqloRQ246ez9cEgsfV3vooAUfVopMS9+IjRtArL
+  artifact: Zips
+  force_update: true
+  on:
+    CI_DEPLOY_GITHUB: True
+after_deploy:
+- ps: >-
+    $rootLocation = ((Get-Item Env:\APPVEYOR_BUILD_FOLDER).Value);
+
+    $trunk = "$rootLocation\ChatbotScriptUpdater";
+
+    $ignore = Set-Location $trunk;
+
+    .\Build\appveyor.after-deployment.ps1
+
+    $ignore = Set-Location $rootLocation;
