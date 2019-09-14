@@ -55,8 +55,10 @@ def OpenScriptUpdater():
         updaterConfig = {
             "path": os.path.realpath(os.path.join(currentDir,"../")),
             "version": Version,
+            "name": ScriptName,
             "chatbot": os.path.join(chatbotRoot, "Streamlabs Chatbot.exe"),
             "script": os.path.basename(os.path.dirname(os.path.realpath(__file__))),
+            "website": Website,
             "repository": {
                 "owner": repoVals[0],
                 "name": repoVals[1]
