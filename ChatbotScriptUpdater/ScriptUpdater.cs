@@ -23,9 +23,13 @@ namespace ChatbotScriptUpdater {
 			public string Script { get; set; }
 			[JsonProperty ( "version" )]
 			public string Version { get; set; }
+			[JsonProperty("name")]
+			public string Name { get; set; }
 			[JsonProperty ( "chatbot" )]
 			public string Chatbot { get; set; }
-			[JsonProperty("repository")]
+			[JsonProperty ( "website" )]
+			public string Website { get; set; }
+			[JsonProperty ("repository")]
 			public ConfigurationRepo Repository { get; set; }
 		}
 

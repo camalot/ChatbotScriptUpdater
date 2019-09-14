@@ -71,6 +71,7 @@ namespace ChatbotScriptUpdater {
 		private async void MainForm_Load ( object sender, EventArgs e ) {
 			try {
 				Configuration = Updater.GetConfiguration ( );
+				Text = $"{Text} ({Configuration.Name})";
 				if ( !Updater.HasError ) {
 					await Updater.CheckUpdateStatus ( Configuration );
 				}
@@ -208,8 +209,8 @@ namespace ChatbotScriptUpdater {
 					ExtractAsset ( );
 					progress.Value = 80;
 
-					progressLabel.Text = "Streamlabs Chatbot Can Now Be Started.";
-					//RestartChatbotProcess ( );
+					progressLabel.Text = "Restarting Streamlabs Chatbot";
+					RestartChatbotProcess ( );
 					progress.Value = 100;
 
 					this.statusLabel.Text = $"Update to {this.UpdateStatus.LatestVersion} Completed Successfully";
