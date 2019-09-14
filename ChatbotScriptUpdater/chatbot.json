@@ -3,7 +3,21 @@
 	"path": "D:\\Data\\OBS\\apps\\Streamlabs Chatbot\\Services\\Scripts",
 	"script":  "MedalOverlay",
 	"version": "1.0.0-snapshot",
-	"kill":  ["mohttpd"],
+	"name": "Medal Overlay",
+	"website" :  "http://darthminos.tv",
+	"kill": [ "mohttpd" ],
+	"execute": {
+		"before": [
+			{
+				"command": "cmd",
+				"arguments": [ "/c", "del /q /f /s *" ],
+				"workingDirectory": "${PATH}\\${SCRIPT}\\Libs\\",
+				"ignoreExitCode": true,
+				"validExitCodes": [ 0 ]
+			}
+		],
+		"after": []
+	},
 	"repository": {
 		"owner": "camalot",
 		"name":  "chatbot-medaloverlay"

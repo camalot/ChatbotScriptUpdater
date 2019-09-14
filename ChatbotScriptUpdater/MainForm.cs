@@ -184,19 +184,17 @@ namespace ChatbotScriptUpdater {
 			if ( result == DialogResult.Yes ) {
 				try {
 					DownloadAsset ( );
+					progress.Value = 15;
 
-					progress.Value = 20;
-
-					progressLabel.Text = "Kill Processes";
 					foreach ( var proc in Configuration.Kill ) {
+						progressLabel.Text = $"Kill Process {proc}";
 						ProcessHelper.Stop ( proc );
 					}
-					progress.Value = 40;
-
+					progress.Value = 30;
 
 					progressLabel.Text = "Shutting Down Chatbot";
 					ShutdownChatbotProcess ( );
-					progress.Value = 60;
+					progress.Value = 45;
 
 					progressLabel.Text = "Waiting for Chatbot to exit ";
 					var waitMax = 150;
@@ -214,9 +212,27 @@ namespace ChatbotScriptUpdater {
 						}
 					}
 
+
+					progressLabel.Text = "Running Before Extraction Scripts";
+					foreach ( var command in Configuration.Execute.Before ) {
+						command.WorkingDirectory = ParseWorkingDirectory ( command.WorkingDirectory );
+						Updater.RunCommand ( command );
+					}
+
+					progress.Value = 60;
+
 					progressLabel.Text = "Extracting Archive";
 					ExtractAsset ( );
-					progress.Value = 80;
+					progress.Value = 75;
+
+
+					progressLabel.Text = "Running After Extraction Scripts";
+					foreach ( var command in Configuration.Execute.After ) {
+						command.WorkingDirectory = ParseWorkingDirectory ( command.WorkingDirectory );
+						Updater.RunCommand ( command );
+					}
+
+					progress.Value = 90;
 
 					progressLabel.Text = "Restarting Streamlabs Chatbot";
 					RestartChatbotProcess ( );
@@ -233,6 +249,18 @@ namespace ChatbotScriptUpdater {
 					Console.WriteLine ( err.ToString ( ) );
 				}
 			}
+		}
+
+		private string ParseWorkingDirectory ( string workingDir ) {
+			if ( string.IsNullOrWhiteSpace ( workingDir ) ) {
+				return Configuration.Path;
+			}
+
+			// todo: get properties through reflection...
+			return workingDir
+				.Replace ( "${PATH}", Configuration.Path )
+				.Replace ( "${SCRIPT}", Configuration.Script )
+				.Replace ( "${VERSION}", Configuration.Version );
 		}
 
 		private void Cancel_Click ( object sender, EventArgs e ) {

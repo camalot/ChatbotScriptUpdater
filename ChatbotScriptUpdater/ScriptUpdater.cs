@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -14,32 +14,54 @@ namespace ChatbotScriptUpdater {
 	public class ScriptUpdater {
 
 		public class Configuration {
-			public Configuration ( ) {
-				Repository = new ConfigurationRepo ( );
-				Kill = new List<string> ( );
-			}
 			[JsonProperty ( "path" )]
 			public string Path { get; set; }
-			[JsonProperty("script")]
+			[JsonProperty ( "script" )]
 			public string Script { get; set; }
 			[JsonProperty ( "version" )]
 			public string Version { get; set; }
-			[JsonProperty("name")]
+			[JsonProperty ( "name" )]
 			public string Name { get; set; }
 			[JsonProperty ( "chatbot" )]
 			public string Chatbot { get; set; }
 			[JsonProperty ( "website" )]
 			public string Website { get; set; }
-			[JsonProperty ("repository")]
-			public ConfigurationRepo Repository { get; set; }
-			[JsonProperty("kill")]
-			public List<string> Kill { get; set; } 
+			[JsonProperty ( "repository" )]
+			public ConfigurationRepo Repository { get; set; } = new ConfigurationRepo ( );
+			[JsonProperty ( "kill" )]
+			public List<string> Kill { get; set; } = new List<string> ( );
+			[JsonProperty ( "execute" )]
+			public ConfigurationExecute Execute { get; set; } = new ConfigurationExecute ( );
+		}
+
+		public class ConfigurationExecute {
+
+			[JsonProperty ( "before" )]
+			public List<ConfigurationExecuteCommand> Before { get; set; } = new List<ConfigurationExecuteCommand> ( );
+			[JsonProperty ( "after" )]
+			public List<ConfigurationExecuteCommand> After { get; set; } = new List<ConfigurationExecuteCommand> ( );
+		}
+
+		public class ConfigurationExecuteCommand {
+			[JsonProperty ( "command" )]
+			public string Command { get; set; }
+			[JsonProperty ( "arguments" )]
+			public List<string> Arguments { get; set; } = new List<string> ( );
+			[JsonProperty ( "workingDirectory" )]
+			public string WorkingDirectory { get; set; }
+			[JsonProperty ( "ignoreExitCode" )]
+			public bool IgnoreExitCode { get; set; } = true;
+			public List<int> ValidExitCodes { get; set; } = new List<int> ( ) { 0 };
+
+			public override string ToString ( ) {
+				return $"{Command} {string.Join ( " ", Arguments )}";
+			}
 		}
 
 		public class ConfigurationRepo {
-			[JsonProperty("name")]
+			[JsonProperty ( "name" )]
 			public string Name { get; set; }
-			[JsonProperty( "owner" )]
+			[JsonProperty ( "owner" )]
 			public string Owner { get; set; }
 		}
 
@@ -50,7 +72,7 @@ namespace ChatbotScriptUpdater {
 		public event EventHandler<UpdateStatusEventArgs> EndUpdateCheck;
 		public event EventHandler<ErrorEventArgs> Error;
 
-		public ScriptUpdater (  ) {
+		public ScriptUpdater ( ) {
 
 		}
 
@@ -78,6 +100,42 @@ namespace ChatbotScriptUpdater {
 			}
 		}
 
+		public void RunCommand(ConfigurationExecuteCommand command) {
+			try {
+				var processInfo = new System.Diagnostics.ProcessStartInfo( command.Command, MakeArgumentSafe ( command.Arguments) );
+				processInfo.UseShellExecute = false;
+				Console.WriteLine ( command.ToString ( ) );
+				if(string.IsNullOrWhiteSpace(command.WorkingDirectory)) {
+					throw new ArgumentException ( "Working Directory MUST Be Set." );
+				}
+				processInfo.WorkingDirectory = command.WorkingDirectory;
+				var process = new System.Diagnostics.Process ( );
+				process.StartInfo = processInfo;
+				process.Start ( );
+				process.WaitForExit ( );
+				if(!command.IgnoreExitCode && command.ValidExitCodes.Count > 0 && !command.ValidExitCodes.Distinct().Contains(process.ExitCode)) {
+					var pluraled = command.ValidExitCodes.Count == 1 ? "" : "s";
+					throw new Exception ( $"Expected exit code{pluraled} ({string.Join ( ", ", command.ValidExitCodes.Distinct() )}) but got {process.ExitCode} for {command}" );
+				}
+			} catch (Exception ex) {
+				if(!command.IgnoreExitCode) {
+					throw ex;
+				}
+			}
+		}
+
+		private string MakeArgumentSafe(IEnumerable<string> args) {
+			var sb = new StringBuilder ( );
+			foreach ( var s in args ) {
+				if(s.Contains(" ")) {
+					sb.Append ( $"\"{s}\" " );
+				} else {
+					sb.Append ( $"{s} " );
+				}
+
+			}
+			return sb.ToString ( ).Trim ( );
+		}
 		public async Task<Github.UpdateCheck> CheckUpdateStatus ( Configuration config ) {
 			try {
 				BeginUpdateCheck?.Invoke ( this, new EventArgs ( ) );
@@ -104,7 +162,7 @@ namespace ChatbotScriptUpdater {
 
 				EndUpdateCheck?.Invoke ( this, new UpdateStatusEventArgs ( ) { Status = result } );
 				return result;
-			} catch (Exception ex) {
+			} catch ( Exception ex ) {
 				HasError = true;
 				Error?.Invoke ( this, new ErrorEventArgs ( ex ) );
 				return new Github.UpdateCheck ( ) {
@@ -118,7 +176,7 @@ namespace ChatbotScriptUpdater {
 
 
 		private async Task<Github.Release> GetLatestRelease ( Configuration config ) {
-			if (config == null || config.Repository == null) {
+			if ( config == null || config.Repository == null ) {
 				throw new NoConfigurationException ( );
 			}
 			var api = $"https://api.github.com/repos/{config.Repository.Owner}/{config.Repository.Name}/releases/latest";

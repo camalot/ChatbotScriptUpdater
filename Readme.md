@@ -58,6 +58,16 @@ def OpenScriptUpdater():
             "name": ScriptName,
             "chatbot": os.path.join(chatbotRoot, "Streamlabs Chatbot.exe"),
             "kill": [], # Array of process names to stop
+            "execute": {
+              "before": [{
+								"command": "del",
+								"arguments": [ "/f", "/q", "/s", "*" ],
+								"workingDirectory": "${PATH}\\${SCRIPT}\\Libs\\",
+								"ignoreExitCode": true,
+								"validExitCodes":  [0]
+							}], # commands to run before extraction
+              "after": [] # command to run after extraction
+            },
             "script": os.path.basename(os.path.dirname(os.path.realpath(__file__))),
             "website": Website,
             "repository": {
