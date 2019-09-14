@@ -3,7 +3,7 @@ skip_tags: true
 image: Visual Studio 2019
 before_build:
 - ps: >-
-		nuget restore
+    nuget restore
     $rootLocation = ((Get-Item Env:\APPVEYOR_BUILD_FOLDER).Value);
 
     $trunk = "$rootLocation\ChatbotScriptUpdater";
