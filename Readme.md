@@ -57,6 +57,7 @@ def OpenScriptUpdater():
             "version": Version,
             "name": ScriptName,
             "chatbot": os.path.join(chatbotRoot, "Streamlabs Chatbot.exe"),
+						"kill": [], # Array of process names to stop
             "script": os.path.basename(os.path.dirname(os.path.realpath(__file__))),
             "website": Website,
             "repository": {

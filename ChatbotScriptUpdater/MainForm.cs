@@ -185,6 +185,15 @@ namespace ChatbotScriptUpdater {
 				try {
 					DownloadAsset ( );
 
+					progress.Value = 20;
+
+					progressLabel.Text = "Kill Processes";
+					foreach ( var proc in Configuration.Kill ) {
+						ProcessHelper.Stop ( proc );
+					}
+					progress.Value = 40;
+
+
 					progressLabel.Text = "Shutting Down Chatbot";
 					ShutdownChatbotProcess ( );
 					progress.Value = 60;

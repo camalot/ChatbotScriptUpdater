@@ -16,6 +16,7 @@ namespace ChatbotScriptUpdater {
 		public class Configuration {
 			public Configuration ( ) {
 				Repository = new ConfigurationRepo ( );
+				Kill = new List<string> ( );
 			}
 			[JsonProperty ( "path" )]
 			public string Path { get; set; }
@@ -31,6 +32,8 @@ namespace ChatbotScriptUpdater {
 			public string Website { get; set; }
 			[JsonProperty ("repository")]
 			public ConfigurationRepo Repository { get; set; }
+			[JsonProperty("kill")]
+			public List<string> Kill { get; set; } 
 		}
 
 		public class ConfigurationRepo {

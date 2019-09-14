@@ -3,6 +3,7 @@
 	"path": "D:\\Data\\OBS\\apps\\Streamlabs Chatbot\\Services\\Scripts",
 	"script":  "MedalOverlay",
 	"version": "1.0.0-snapshot",
+	"kill":  ["mohttpd"],
 	"repository": {
 		"owner": "camalot",
 		"name":  "chatbot-medaloverlay"
