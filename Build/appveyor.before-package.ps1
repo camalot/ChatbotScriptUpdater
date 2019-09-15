@@ -1,5 +1,5 @@
 if ( !$env:APPVEYOR_PULL_REQUEST_NUMBER -and ($env:APPVEYOR_REPO_BRANCH -eq "develop") ) {
-  $env:CI_DEPLOY_GITHUB = $false;
+  $env:CI_DEPLOY_GITHUB = $true;
 
 	if ( !(Test-Path -Path "$env:APPVEYOR_BUILD_FOLDER/deps/$ENV:APPVEYOR_PROJECT_SLUG" ) ) {
 			Write-Host "Create $env:APPVEYOR_BUILD_FOLDER/deps/$ENV:APPVEYOR_PROJECT_SLUG";
