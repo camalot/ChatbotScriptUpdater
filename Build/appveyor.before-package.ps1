@@ -8,7 +8,10 @@ if ( !$env:APPVEYOR_PULL_REQUEST_NUMBER -and ($env:APPVEYOR_REPO_BRANCH -eq "dev
 	Write-Host "Copy * to $env:APPVEYOR_BUILD_FOLDER/deps/$ENV:APPVEYOR_PROJECT_SLUG";
 	Copy-Item -Path $env:APPVEYOR_BUILD_FOLDER/ChatbotScriptUpdater/bin/debug/* -Include "*.exe", "*.dll" -Destination "$env:APPVEYOR_BUILD_FOLDER/deps/$ENV:APPVEYOR_PROJECT_SLUG/" | Write-Host;
 
-	Compress-Archive -LiteralPath $env:APPVEYOR_BUILD_FOLDER/deps/$ENV:APPVEYOR_PROJECT_SLUG/* -CompressionLevel Optimal -DestinationPath "$env:APPVEYOR_BUILD_FOLDER/deps/$($ENV:APPVEYOR_PROJECT_SLUG)-v$($ENV:APPVEYOR_BUILD_VERSION).zip";
+		Get-ChildItem -Path $env:APPVEYOR_BUILD_FOLDER/deps/$ENV:APPVEYOR_PROJECT_SLUG/ | Write-Host;
+
+
+	Compress-Archive -Path $env:APPVEYOR_BUILD_FOLDER/deps/$ENV:APPVEYOR_PROJECT_SLUG/* -CompressionLevel Optimal -DestinationPath "$env:APPVEYOR_BUILD_FOLDER/deps/$($ENV:APPVEYOR_PROJECT_SLUG)-v$($ENV:APPVEYOR_BUILD_VERSION).zip";
 
 	Get-ChildItem -Path $env:APPVEYOR_BUILD_FOLDER/deps/ | Write-Host;
 
