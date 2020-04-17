@@ -90,7 +90,7 @@ namespace ChatbotScriptUpdater {
 			} else {
 				this.linkRepo.Enabled = false;
 			}
-			if ( string.IsNullOrWhiteSpace ( Configuration.Website ) ) {
+			if ( !string.IsNullOrWhiteSpace ( Configuration.Website ) ) {
 				this.website.Text = Configuration.Website;
 				this.website.Enabled = true;
 			} else {
