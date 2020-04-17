@@ -1,4 +1,4 @@
-version: 1.0.{build}
+version: 2.0.{build}
 skip_tags: true
 image: Visual Studio 2019
 before_build:
@@ -41,7 +41,7 @@ after_build:
     Set-Location $rootLocation | Out-Null;  
 
 artifacts:
-- path: '**\chatbotscriptupdater-v*.zip'
+- path: 'dist\**\*.zip'
   name: Zips
 before_deploy:
 - ps: >-
