@@ -88,35 +88,42 @@
 			// 
 			// linkRepo
 			// 
-			this.linkRepo.AutoSize = true;
+			this.linkRepo.ActiveLinkColor = System.Drawing.Color.Blue;
+			this.linkRepo.AutoEllipsis = true;
 			this.linkRepo.Location = new System.Drawing.Point(9, 149);
 			this.linkRepo.Name = "linkRepo";
-			this.linkRepo.Size = new System.Drawing.Size(86, 13);
+			this.linkRepo.Size = new System.Drawing.Size(408, 13);
 			this.linkRepo.TabIndex = 5;
 			this.linkRepo.TabStop = true;
 			this.linkRepo.Text = "Open Repository";
+			this.linkRepo.VisitedLinkColor = System.Drawing.Color.Blue;
 			this.linkRepo.Click += new System.EventHandler(this.LinkRepo_Click);
 			// 
 			// website
 			// 
-			this.website.AutoSize = true;
-			this.website.Location = new System.Drawing.Point(12, 173);
+			this.website.ActiveLinkColor = System.Drawing.Color.Blue;
+			this.website.AutoEllipsis = true;
+			this.website.Location = new System.Drawing.Point(9, 173);
 			this.website.Name = "website";
-			this.website.Size = new System.Drawing.Size(52, 13);
+			this.website.Size = new System.Drawing.Size(408, 13);
 			this.website.TabIndex = 6;
 			this.website.TabStop = true;
 			this.website.Text = "[Website]";
+			this.website.VisitedLinkColor = System.Drawing.Color.Blue;
 			this.website.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.Website_LinkClicked);
 			// 
 			// copyright
 			// 
-			this.copyright.AutoSize = true;
-			this.copyright.Location = new System.Drawing.Point(148, 198);
+			this.copyright.ActiveLinkColor = System.Drawing.Color.Blue;
+			this.copyright.Dock = System.Windows.Forms.DockStyle.Bottom;
+			this.copyright.Location = new System.Drawing.Point(0, 207);
 			this.copyright.Name = "copyright";
-			this.copyright.Size = new System.Drawing.Size(257, 13);
+			this.copyright.Size = new System.Drawing.Size(551, 13);
 			this.copyright.TabIndex = 7;
 			this.copyright.TabStop = true;
-			this.copyright.Text = "ApplicationUpdater - Copyright © Ryan Conrad 2020 ";
+			this.copyright.Text = "Application Updater - Copyright © Ryan Conrad 2019-2020";
+			this.copyright.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+			this.copyright.VisitedLinkColor = System.Drawing.Color.Blue;
 			this.copyright.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.Copyright_LinkClicked);
 			// 
 			// MainForm
@@ -144,7 +151,6 @@
 			this.TopMost = true;
 			this.Load += new System.EventHandler(this.MainForm_Load);
 			this.ResumeLayout(false);
-			this.PerformLayout();
 
 		}
 

@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyDescription ( "Updates application from a github release" )]
 [assembly: AssemblyConfiguration ( "" )]
 [assembly: AssemblyCompany ( "Darth Minos" )]
-[assembly: AssemblyProduct ( "ApplicationUpdater" )]
+[assembly: AssemblyProduct ( "Application Updater" )]
 [assembly: AssemblyCopyright ( "Copyright © Ryan Conrad 2019-2020" )]
 [assembly: AssemblyTrademark ( "" )]
 [assembly: AssemblyCulture ( "" )]
