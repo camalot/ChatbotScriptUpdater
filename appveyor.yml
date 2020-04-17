@@ -18,7 +18,8 @@ before_build:
     Set-Location $rootLocation | Out-Null;  
 
 build:
-  verbosity: minimal
+  project: ./Build/Build.msbuild
+  verbosity: normal
 before_package:
 - ps: >-
     $rootLocation = ((Get-Item Env:\APPVEYOR_BUILD_FOLDER).Value);  
