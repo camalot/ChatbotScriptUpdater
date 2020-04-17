@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="14.0" DefaultTargets="Build">
+	<Import Project="$(MSBuildProjectDirectory)\..\Build\MSBuild.Community.Tasks.targets" Condition="'$(MSBuildCommunityTasksPath)' == ''"/>
+	<PropertyGroup>
+		<!-- This indicates that this file has been loaded -->
+		<SharedProperties>SharedProperties</SharedProperties>
+		<Major>2</Major>
+		<Minor>0</Minor>
+		<Build>0</Build>
+		<Revision>0</Revision>
+		<APPVEYOR Condition=" '$(APPVEYOR)' == '' ">False</APPVEYOR>
+		<APPVEYOR_BUILD_NUMBER Condition=" '$(APPVEYOR_BUILD_NUMBER)' == '' ">0</APPVEYOR_BUILD_NUMBER>
+		<CI_PROJECT_NAME>ApplicationUpater</CI_PROJECT_NAME>
+	</PropertyGroup>
+	<PropertyGroup  Condition=" '$(APPVEYOR)' == 'True' AND '$(APPVEYOR_BUILD_NUMBER)' != '' ">
+		<CI_BUILD_NUMBER>$(APPVEYOR_BUILD_NUMBER)</CI_BUILD_NUMBER>
+		<Build>$(CI_BUILD_NUMBER)</Build>
+
+		<CI_SEMVERSION>$(Major).$(Minor).$(Build)</CI_SEMVERSION>
+	</PropertyGroup>
+	<PropertyGroup Condition=" '$(APPVEYOR)' != 'True' OR '$(APPVEYOR_BUILD_NUMBER)' == '' ">
+		<CI_BUILD_NUMBER>0</CI_BUILD_NUMBER>
+		<Build>$(CI_BUILD_NUMBER)</Build>
+		<CI_SEMVERSION>$(Major).$(Minor).$(Build)-snapshot</CI_SEMVERSION>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<CI_BUILD_VERSION>$(Major).$(Minor).$(Build).$(Revision)</CI_BUILD_VERSION>
+	</PropertyGroup>
+</Project>

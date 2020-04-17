@@ -1,7 +1,8 @@
 {
-	"chatbot": "D:\\Data\\OBS\\apps\\Streamlabs Chatbot\\Streamlabs Chatbot.exe",
+	"application": "D:\\Data\\OBS\\apps\\Streamlabs Chatbot\\Streamlabs Chatbot.exe",
 	"path": "D:\\Data\\OBS\\apps\\Streamlabs Chatbot\\Services\\Scripts",
-	"script":  "MedalOverlay",
+	"processName":  "Streamlabs Chatbot",
+	"folderName":  "MedalOverlay",
 	"version": "1.0.0-snapshot",
 	"name": "Medal Overlay",
 	"website" :  "http://darthminos.tv",

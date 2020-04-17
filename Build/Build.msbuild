@@ -1,0 +1,93 @@
+<?xml version="1.0"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="14" DefaultTargets="Build">
+	<Import Project="$(MSBuildProjectDirectory)\SharedProperties.msbuild" Condition="'$(SharedProperties)' != 'SharedProperties' " />
+	<Import Project="$(MSBuildExtendedTasksTargets)" Condition="Exists($(MSBuildExtendedTasksTargets))" />
+	<PropertyGroup>
+		<Project Condition=" '$(Project)' == '' ">ApplicationUpdater</Project>
+		<Configuration Condition=" '$(Configuration)' == '' ">Release</Configuration>
+		<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+		<MSBuildProperties>Configuration=$(Configuration);Platform=$(Platform);VisualStudioVersion=16.0</MSBuildProperties>
+		<OutputPath Condition=" '$(OutputPath)' == '' ">.\bin\$(Configuration)</OutputPath>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<ProjectsToBuild Include="$(MSBuildProjectDirectory)\..\$(Project)\**\*.csproj" />
+		
+	</ItemGroup>
+
+	<Target Name="Build" DependsOnTargets="CleanBuild;AssemblyInfo;BuildAdministrator;BuildInvoker;ZipReleases">
+	</Target>
+
+	<Target Name="CleanBuild" DependsOnTargets="CleanObj">
+		<RemoveDir Directories="$(OutputPath)" Condition="Exists('$(OutputPath)')" ContinueOnError="true" />
+		<MakeDir Directories="$(OutputPath)" Condition="!Exists('$(OutputPath)')" />
+	</Target>
+
+	<Target Name="CleanObj">
+		<RemoveDir Directories="$(MSBuildProjectDirectory)\..\$(CI_PROJECT_NAME)\obj" Condition="Exists('$(MSBuildProjectDirectory)\..\$(CI_PROJECT_NAME)\obj')" ContinueOnError="false" />
+	</Target>
+
+	<Target Name="BuildAdministrator">
+		<MSBuild Projects ="@(ProjectsToBuild)" ContinueOnError="false"
+						 Properties="$(MSBuildProperties);UserAccessLevel=Administrator;SharedProperties=SharedProperties" Targets="Clean;Build" RunEachTargetSeparately="true" UseResultsCache="false">
+			<Output ItemName="OutputFiles" TaskParameter="TargetOutputs"/>
+		</MSBuild>
+	</Target>
+
+	<Target Name="BuildInvoker">
+		<MSBuild Projects ="@(ProjectsToBuild)" ContinueOnError="false"
+						 Properties="$(MSBuildProperties);UserAccessLevel=Invoker;SharedProperties=SharedProperties" Targets="Clean;Build" RunEachTargetSeparately="true" UseResultsCache="false">
+			<Output ItemName="OutputFiles" TaskParameter="TargetOutputs"/>
+		</MSBuild>
+	</Target>
+
+	<Target Name="AssemblyInfo"
+						Outputs="$(MSBuildProjectDirectory)\..\Shared\AssemblyVersionInfo.cs"
+						Condition=" '$(CI_BUILD_VERSION)' != '' ">
+
+		<AssemblyInfo CodeLanguage="CS"
+									AssemblyFileVersion="$(CI_BUILD_VERSION)"
+									AssemblyVersion="$(CI_BUILD_VERSION)"
+									OutputFile="$(MSBuildProjectDirectory)\..\Shared\AssemblyVersionInfo.cs"
+									/>
+	</Target>
+	
+	<Target Name="ZipReleases" DependsOnTargets="ZipAdministorRelease;ZipInvokerRelease"></Target>
+	
+	<Target Name="ZipAdministorRelease">
+		<CreateItem Include="$(MSBuildProjectDirectory)\..\$(Project)\$(OutputPath)\Administrator\**\*.*" 
+								Exclude="$(MSBuildProjectDirectory)\..\$(Project)\$(OutputPath)\Administrator\**\*.zip;$(MSBuildProjectDirectory)\..\$(Project)\$(OutputPath)\Administrator\**\*.xml;$(MSBuildProjectDirectory)\..\$(Project)\$(OutputPath)\Administrator\**\*.manifest;$(MSBuildProjectDirectory)\..\$(Project)\$(OutputPath)\Administrator\**\*.json;">
+			<Output ItemName="AdministratorZipFiles" TaskParameter="Include" />
+		</CreateItem>
+
+		<Message Text="$(OutputPath)\Administrator\**\*.*" Importance="high" />
+		<Message Text="AdministratorZipFiles: $(AdministratorZipFiles)" Importance="high" />
+		
+		<CreateProperty Value="$(MSBuildProjectDirectory)\..\dist\$(CI_SEMVERSION)\$(CI_PROJECT_NAME).Administrator.$(CI_SEMVERSION).zip">
+			<Output PropertyName="OutZipFileName" TaskParameter="Value"/>
+		</CreateProperty>
+		
+		
+		<Zip Comment="$(CI_PROJECT_NAME)-Administrator version $(CI_SEMVERSION)" Files="@(AdministratorZipFiles)"
+				 WorkingDirectory="$(MSBuildProjectDirectory)\..\$(Project)\$(OutputPath)\Administrator\"
+				 ZipFileName="$(OutZipFileName)" ZipLevel="9" Flatten="False" />
+	</Target>
+
+	<Target Name="ZipInvokerRelease">
+		<CreateItem Include="$(MSBuildProjectDirectory)\..\$(Project)\$(OutputPath)\Invoker\**\*.*" 
+								Exclude="$(MSBuildProjectDirectory)\..\$(Project)\$(OutputPath)\Invoker\**\*.zip;$(MSBuildProjectDirectory)\..\$(Project)\$(OutputPath)\Invoker\**\*.xml;$(MSBuildProjectDirectory)\..\$(Project)\$(OutputPath)\Invoker\**\*.manifest;$(MSBuildProjectDirectory)\..\$(Project)\$(OutputPath)\Invoker\**\*.json;">
+			<Output ItemName="InvokerZipFiles" TaskParameter="Include" />
+		</CreateItem>
+
+		<Message Text="$(OutputPath)\Invoker\**\*.*" Importance="high" />
+		<Message Text="ZipFiles: $(InvokerZipFiles)" Importance="high" />
+
+		<CreateProperty Value="$(MSBuildProjectDirectory)\..\dist\$(CI_SEMVERSION)\$(CI_PROJECT_NAME).Invoker.$(CI_SEMVERSION).zip">
+			<Output PropertyName="OutZipFileName" TaskParameter="Value"/>
+		</CreateProperty>
+		<Zip Comment="$(CI_PROJECT_NAME)-Invoker version $(CI_BUILD_VERSION)" Files="@(InvokerZipFiles)"
+				 WorkingDirectory="$(MSBuildProjectDirectory)\..\$(Project)\$(OutputPath)\Invoker\"
+				 ZipFileName="$(OutZipFileName)" ZipLevel="9" Flatten="False" />
+	</Target>
+
+</Project>

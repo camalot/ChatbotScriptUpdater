@@ -1,0 +1,22 @@
+{
+	"application": "D:\\Data\\OBS\\apps\\Stic-A-Pic\\Stic-A-Pic.exe",
+	"path": "D:\\Data\\OBS\\apps\\",
+	"folderName": "Stic-A-Pic",
+	"version": "1.0.0-snapshot",
+	"name": "Stic-A-Pic",
+	"website": "http://darthminos.tv",
+	"processName": "Stic-A-Pic",
+	"requiresRestart": true,
+	"kill": [],
+	"execute": {
+		"before": [
+			{
+			}
+		],
+		"after": []
+	},
+	"repository": {
+		"owner": "camalot",
+		"name": "stic-a-pic"
+	}
+}

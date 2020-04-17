@@ -11,19 +11,22 @@ using Newtonsoft.Json;
 using Semver;
 
 namespace ChatbotScriptUpdater {
-	public class ScriptUpdater {
+	public class ApplicationUpdater {
 
 		public class Configuration {
 			[JsonProperty ( "path" )]
 			public string Path { get; set; }
-			[JsonProperty ( "script" )]
-			public string Script { get; set; }
+			[JsonProperty ( "folderName" )]
+			public string FolderName { get; set; }
 			[JsonProperty ( "version" )]
 			public string Version { get; set; }
 			[JsonProperty ( "name" )]
 			public string Name { get; set; }
-			[JsonProperty ( "chatbot" )]
-			public string Chatbot { get; set; }
+			public string ProcessName { get; set; } = "Streamlabs Chatbot";
+			[JsonProperty ( "application" )]
+			public string Application { get; set; }
+
+
 			[JsonProperty ( "requiresRestart" )]
 			public bool RequiresRestart { get; set; } = false;
 			[JsonProperty ( "website" )]
@@ -34,6 +37,17 @@ namespace ChatbotScriptUpdater {
 			public List<string> Kill { get; set; } = new List<string> ( );
 			[JsonProperty ( "execute" )]
 			public ConfigurationExecute Execute { get; set; } = new ConfigurationExecute ( );
+
+			public ConfigurationInterface Interface { get; set; } = new ConfigurationInterface ( );
+		}
+
+		public class ConfigurationInterface {
+			[JsonProperty("closeButton")]
+			public string CloseButton { get; set; } = "&Close";
+			[JsonProperty ( "downloadButton" )]
+			public string DownloadButton { get; set; } = "&Dowload && Update";
+			[JsonProperty("repsitoryLink")]
+			public string OpenRepositoryLink { get; set; } = "Open Repository";
 		}
 
 		public class ConfigurationExecute {
@@ -53,6 +67,7 @@ namespace ChatbotScriptUpdater {
 			public string WorkingDirectory { get; set; }
 			[JsonProperty ( "ignoreExitCode" )]
 			public bool IgnoreExitCode { get; set; } = true;
+			[JsonProperty ( "validExitCodes" )]
 			public List<int> ValidExitCodes { get; set; } = new List<int> ( ) { 0 };
 
 			public override string ToString ( ) {
@@ -74,7 +89,7 @@ namespace ChatbotScriptUpdater {
 		public event EventHandler<UpdateStatusEventArgs> EndUpdateCheck;
 		public event EventHandler<ErrorEventArgs> Error;
 
-		public ScriptUpdater ( ) {
+		public ApplicationUpdater ( ) {
 
 		}
 
@@ -83,6 +98,7 @@ namespace ChatbotScriptUpdater {
 		public Configuration GetConfiguration ( string file = "update.manifest" ) {
 			var path = Path.GetDirectoryName ( Assembly.GetExecutingAssembly ( ).Location );
 			var fullPath = Path.Combine ( path, file );
+			Console.WriteLine ( fullPath );
 			if ( File.Exists ( fullPath ) ) {
 				using ( var fr = new StreamReader ( fullPath ) ) {
 					using ( var jr = new JsonTextReader ( fr ) ) {
@@ -92,7 +108,7 @@ namespace ChatbotScriptUpdater {
 				}
 			} else {
 				HasError = true;
-				Error?.Invoke ( this, new ErrorEventArgs ( new FileNotFoundException ( "Unable to locate required chatbot.json config file" ) ) );
+				Error?.Invoke ( this, new ErrorEventArgs ( new FileNotFoundException ( "Unable to locate required manifest file" ) ) );
 
 				return new Configuration {
 					Version = "0.0.0",
@@ -149,6 +165,7 @@ namespace ChatbotScriptUpdater {
 				};
 				if ( release != null && release.Assets?.Count ( ) > 0 ) {
 					var releaseVersion = SemVersion.Parse ( release.TagName );
+					
 					result = new Github.UpdateCheck ( ) {
 						HasUpdate = userVersion < releaseVersion,
 						LatestVersion = releaseVersion,

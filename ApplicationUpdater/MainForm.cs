@@ -13,6 +13,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using ChatbotScriptUpdater.Extensions;
 using ChatbotScriptUpdater.Github;
 
 namespace ChatbotScriptUpdater {
@@ -21,18 +22,19 @@ namespace ChatbotScriptUpdater {
 		public MainForm ( ) {
 
 
-			Updater = new ScriptUpdater ( );
+			Updater = new ApplicationUpdater ( );
 			Updater.BeginUpdateCheck += Updater_BeginUpdateCheck;
 			Updater.EndUpdateCheck += Updater_EndUpdateCheck;
 			Updater.Error += Updater_Error;
 
-			Configuration = new ScriptUpdater.Configuration {
+			Configuration = new ApplicationUpdater.Configuration {
 				Version = "0.0.0",
 				Repository = null
 			};
 
 
 			InitializeComponent ( );
+
 			this.statusLabel.Text = "";
 		}
 
@@ -42,7 +44,7 @@ namespace ChatbotScriptUpdater {
 			this.statusLabel.Text = e.GetException ( ).Message;
 		}
 
-		private void Updater_EndUpdateCheck ( object sender, ScriptUpdater.UpdateStatusEventArgs e ) {
+		private void Updater_EndUpdateCheck ( object sender, ApplicationUpdater.UpdateStatusEventArgs e ) {
 			UpdateStatus = e.Status;
 			if ( UpdateStatus.HasUpdate ) {
 				this.statusLabel.Text = $"Update Available: v{UpdateStatus.LatestVersion}. You are running v{UpdateStatus.UserVersion}";
@@ -59,13 +61,14 @@ namespace ChatbotScriptUpdater {
 
 		}
 
-		public ScriptUpdater Updater { get; set; }
+		public ApplicationUpdater Updater { get; set; }
 		public UpdateCheck UpdateStatus { get; set; }
-		public ScriptUpdater.Configuration Configuration { get; set; }
+		public ApplicationUpdater.Configuration Configuration { get; set; }
 
 		private async void MainForm_Load ( object sender, EventArgs e ) {
 			try {
 				Configuration = Updater.GetConfiguration ( );
+				InitalizeUI ( );
 				Text = $"{Text} ({Configuration.Name})";
 				if ( !Updater.HasError ) {
 					await Updater.CheckUpdateStatus ( Configuration );
@@ -73,6 +76,12 @@ namespace ChatbotScriptUpdater {
 			} catch {
 
 			}
+		}
+
+		private void InitalizeUI ( ) {
+			this.cancel.Text = Configuration.Interface.CloseButton;
+			this.updateNow.Text = Configuration.Interface.DownloadButton;
+			this.linkRepo.Text = Configuration.Interface.OpenRepositoryLink;
 		}
 
 		private void DownloadAsset ( ) {
@@ -83,6 +92,7 @@ namespace ChatbotScriptUpdater {
 
 			using ( var http = new WebClient ( ) ) {
 				var path = Path.GetDirectoryName ( Assembly.GetExecutingAssembly ( ).Location );
+				//var tempPath = Path.GetTempPath ( );
 				var local = Path.Combine ( path, UpdateStatus.Asset.Name );
 
 				http.DownloadFileCompleted += Http_DownloadFileCompleted;
@@ -117,6 +127,7 @@ namespace ChatbotScriptUpdater {
 			// the path is the path of Medal Overlay. This gets the parent.
 			var slcScriptsPath = new DirectoryInfo ( Configuration.Path
 			/*@"D:\Development\projects\github\chatbot-medal\MedalRunner\MedalOverlayUpdater\bin\Debug\Scripts\MedalOverlay"*/
+			/*@"D:\Data\OBS\apps"*/
 			);
 			if ( File.Exists ( local ) ) {
 				if ( slcScriptsPath.Exists ) {
@@ -126,25 +137,26 @@ namespace ChatbotScriptUpdater {
 						Directory.Delete ( Path.Combine ( path, "temp" ), true );
 					}
 					ZipFile.ExtractToDirectory ( local, Path.Combine ( path, "temp" ) );
-					MoveDirectory ( Path.Combine ( path, "temp", Configuration.Script ), Path.Combine ( dest, Configuration.Script ) );
+					MoveDirectory ( Path.Combine ( path, "temp", Configuration.FolderName ), Path.Combine ( dest, Configuration.FolderName ) );
 					if ( Directory.Exists ( Path.Combine ( path, "temp" ) ) ) {
 						Directory.Delete ( Path.Combine ( path, "temp" ), true );
 					}
 				} else {
 					throw new DirectoryNotFoundException ( $"Unable to locate directory: {slcScriptsPath}" );
 				}
+				File.Delete ( local );
 			} else {
 				throw new FileNotFoundException ( $"Unable to locate file: {local}" );
 			}
 		}
 
-		private void ShutdownChatbotProcess ( ) {
-			ProcessHelper.Stop ( "Streamlabs Chatbot" );
+		private void ShutdownApplicationProcess ( ) {
+			ProcessHelper.Stop ( this.Configuration.ProcessName );
 		}
 
-		private void RestartChatbotProcess ( ) {
-			var processInfo = new System.Diagnostics.ProcessStartInfo ( Configuration.Chatbot );
-			processInfo.WorkingDirectory = System.IO.Path.GetDirectoryName ( Configuration.Chatbot );
+		private void RestartApplicationProcess ( ) {
+			var processInfo = new System.Diagnostics.ProcessStartInfo ( Configuration.Application );
+			processInfo.WorkingDirectory = System.IO.Path.GetDirectoryName ( Configuration.Application );
 			var process = new System.Diagnostics.Process ( );
 			process.StartInfo = processInfo;
 			process.Start ( );
@@ -171,7 +183,7 @@ namespace ChatbotScriptUpdater {
 
 		private void UpdateNow_Click ( object sender, EventArgs e ) {
 			this.cancel.Enabled = false;
-			var result = MessageBox.Show ( "This will shutdown Streamlabs Chatbot, and restart it after update.\n\nDo you want to continue?",
+			var result = MessageBox.Show ( $"This will shutdown {Configuration.ProcessName}, and restart it after update.\n\nDo you want to continue?",
 				"Continue?",
 				MessageBoxButtons.YesNo,
 				MessageBoxIcon.Question );
@@ -184,23 +196,25 @@ namespace ChatbotScriptUpdater {
 					foreach ( var proc in Configuration.Kill ) {
 						progressLabel.Text = $"Kill Process {proc}";
 						ProcessHelper.Stop ( proc );
+						Thread.Sleep ( 500 );
 					}
+
 					progress.Value = 30;
 
 					if ( Configuration.RequiresRestart ) {
-						progressLabel.Text = "Shutting Down Chatbot";
-						ShutdownChatbotProcess ( );
+						progressLabel.Text = "Shutting Down Application";
+						ShutdownApplicationProcess ( );
 
-						progressLabel.Text = "Waiting for Chatbot to exit ";
+						progressLabel.Text = $"Waiting for {Configuration.Name} to exit ";
 						var waitMax = 150;
 						var cnt = 0;
 						while ( true ) {
 							if ( cnt++ > waitMax ) {
-								throw new TimeoutException ( "Timeout while waiting for Streamlabs Chatbot to exit" );
+								throw new TimeoutException ( $"Timeout while waiting for {Configuration.ProcessName} to exit" );
 							}
-							System.Diagnostics.Process[] processList = System.Diagnostics.Process.GetProcessesByName ( "Streamlabs Chatbot" );
+							System.Diagnostics.Process[] processList = System.Diagnostics.Process.GetProcessesByName ( Configuration.ProcessName );
 							if ( processList.Length > 0 ) {
-								progressLabel.Text = $"Waiting for Chatbot to exit {SpinText ( cnt )}";
+								progressLabel.Text = $"Waiting for {Configuration.ProcessName} to exit {SpinText ( cnt )}";
 								Thread.Sleep ( 100 );
 							} else {
 								break;
@@ -231,8 +245,8 @@ namespace ChatbotScriptUpdater {
 					progress.Value = 90;
 
 					if ( Configuration.RequiresRestart ) {
-						progressLabel.Text = "Restarting Streamlabs Chatbot";
-						RestartChatbotProcess ( );
+						progressLabel.Text = $"Restarting {Configuration.ProcessName}";
+						RestartApplicationProcess ( );
 					}
 
 					progress.Value = 100;
@@ -258,7 +272,8 @@ namespace ChatbotScriptUpdater {
 			// todo: get properties through reflection...
 			return workingDir
 				.Replace ( "${PATH}", Configuration.Path )
-				.Replace ( "${SCRIPT}", Configuration.Script )
+				.Replace ( "${SCRIPT}", Configuration.FolderName )
+				.Replace ( "${FOLDERNAME}", Configuration.FolderName )
 				.Replace ( "${VERSION}", Configuration.Version );
 		}
 

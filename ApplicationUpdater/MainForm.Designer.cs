@@ -114,7 +114,7 @@
 			this.Name = "MainForm";
 			this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-			this.Text = "Chatbot Script Updater";
+			this.Text = "Application Updater";
 			this.TopMost = true;
 			this.Load += new System.EventHandler(this.MainForm_Load);
 			this.ResumeLayout(false);

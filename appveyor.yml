@@ -11,7 +11,7 @@ before_build:
 
     $rootLocation = ((Get-Item Env:\APPVEYOR_BUILD_FOLDER).Value);  
 
-    Set-Location $rootLocation\ChatbotScriptUpdater | Out-Null;  
+    Set-Location $rootLocation\ApplicationUpdater | Out-Null;  
 
     ..\Build\appveyor.before-build.ps1;  
 
@@ -23,7 +23,7 @@ before_package:
 - ps: >-
     $rootLocation = ((Get-Item Env:\APPVEYOR_BUILD_FOLDER).Value);  
 
-    Set-Location $rootLocation\ChatbotScriptUpdater | Out-Null;  
+    Set-Location $rootLocation\ApplicationUpdater | Out-Null;  
 
     ..\Build\appveyor.before-package.ps1;  
 
@@ -33,7 +33,7 @@ after_build:
 - ps: >-
     $rootLocation = ((Get-Item Env:\APPVEYOR_BUILD_FOLDER).Value);  
 
-    Set-Location "$rootLocation\ChatbotScriptUpdater" | Out-Null;  
+    Set-Location "$rootLocation\ApplicationUpdater" | Out-Null;  
 
     ..\Build\appveyor.after-build.ps1;  
 
@@ -46,7 +46,7 @@ before_deploy:
 - ps: >-
     $rootLocation = ((Get-Item Env:\APPVEYOR_BUILD_FOLDER).Value);  
 
-    Set-Location $rootLocation\ChatbotScriptUpdater | Out-Null;  
+    Set-Location $rootLocation\ApplicationUpdater | Out-Null;  
 
     ..\Build\appveyor.before-deployment.ps1;  
 
@@ -64,7 +64,7 @@ after_deploy:
 - ps: >-
     $rootLocation = ((Get-Item Env:\APPVEYOR_BUILD_FOLDER).Value);  
 
-    Set-Location $rootLocation\ChatbotScriptUpdater | Out-Null;   
+    Set-Location $rootLocation\ApplicationUpdater | Out-Null;   
 
     ..\Build\appveyor.after-deployment.ps1;  
 

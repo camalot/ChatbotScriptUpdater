@@ -1,11 +1,13 @@
 
 
-# CHATBOT SCRIPT UPDATER
+# APPLICATION UPDATER
 
-This is an application that can be included with your streamlabs chatbot scripts and can go out and download the latest release (zipped) from github release.
+This is an application that can update an application, or script from a release published as a zip file on github.
+
+There is a verison that requires administrator access, and one that runs at the user level of the invoking user.
 
 
-### 
+# STREAMLABS CHATBOT SCRIPT EXAMPLE
 
 ```json
 {
@@ -49,7 +51,7 @@ def OpenScriptUpdater():
             if os.path.isfile(full_file_name):
                 Parent.Log(ScriptName, "Copy: " + full_file_name)
                 shutil.copy(full_file_name, tempdir)
-        updater = os.path.join(tempdir, "ChatbotScriptUpdater.exe")
+        updater = os.path.join(tempdir, ApplicationUpdater.exe")
         updaterConfigFile = os.path.join(tempdir, "update.manifest")
         repoVals = Repo.split('/')
 
@@ -58,8 +60,10 @@ def OpenScriptUpdater():
             "path": os.path.realpath(os.path.join(currentDir,"../")),
             "version": Version,
             "name": ScriptName,
+						"folderName": os.path.basename(os.path.dirname(os.path.realpath(__file__))),
 						"requiresRestart": True, # Shutdown and restart Chatbot
-            "chatbot": os.path.join(chatbotRoot, "Streamlabs Chatbot.exe"),
+						"processName": "Streamlabs Chatbot",
+            "application": os.path.join(chatbotRoot, "Streamlabs Chatbot.exe"),
             "kill": [], # Array of process names to stop
             "execute": {
               "before": [{
