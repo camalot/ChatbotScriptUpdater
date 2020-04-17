@@ -31,6 +31,8 @@
 			this.progress = new System.Windows.Forms.ProgressBar();
 			this.progressLabel = new System.Windows.Forms.Label();
 			this.linkRepo = new System.Windows.Forms.LinkLabel();
+			this.website = new System.Windows.Forms.LinkLabel();
+			this.copyright = new System.Windows.Forms.LinkLabel();
 			this.SuspendLayout();
 			// 
 			// statusLabel
@@ -87,7 +89,7 @@
 			// linkRepo
 			// 
 			this.linkRepo.AutoSize = true;
-			this.linkRepo.Location = new System.Drawing.Point(13, 159);
+			this.linkRepo.Location = new System.Drawing.Point(9, 149);
 			this.linkRepo.Name = "linkRepo";
 			this.linkRepo.Size = new System.Drawing.Size(86, 13);
 			this.linkRepo.TabIndex = 5;
@@ -95,12 +97,36 @@
 			this.linkRepo.Text = "Open Repository";
 			this.linkRepo.Click += new System.EventHandler(this.LinkRepo_Click);
 			// 
+			// website
+			// 
+			this.website.AutoSize = true;
+			this.website.Location = new System.Drawing.Point(12, 173);
+			this.website.Name = "website";
+			this.website.Size = new System.Drawing.Size(52, 13);
+			this.website.TabIndex = 6;
+			this.website.TabStop = true;
+			this.website.Text = "[Website]";
+			this.website.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.Website_LinkClicked);
+			// 
+			// copyright
+			// 
+			this.copyright.AutoSize = true;
+			this.copyright.Location = new System.Drawing.Point(148, 198);
+			this.copyright.Name = "copyright";
+			this.copyright.Size = new System.Drawing.Size(257, 13);
+			this.copyright.TabIndex = 7;
+			this.copyright.TabStop = true;
+			this.copyright.Text = "ApplicationUpdater - Copyright © Ryan Conrad 2020 ";
+			this.copyright.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.Copyright_LinkClicked);
+			// 
 			// MainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.CancelButton = this.cancel;
-			this.ClientSize = new System.Drawing.Size(551, 198);
+			this.ClientSize = new System.Drawing.Size(551, 220);
+			this.Controls.Add(this.copyright);
+			this.Controls.Add(this.website);
 			this.Controls.Add(this.linkRepo);
 			this.Controls.Add(this.progressLabel);
 			this.Controls.Add(this.progress);
@@ -130,6 +156,8 @@
 		private System.Windows.Forms.ProgressBar progress;
 		private System.Windows.Forms.Label progressLabel;
 		private System.Windows.Forms.LinkLabel linkRepo;
+		private System.Windows.Forms.LinkLabel website;
+		private System.Windows.Forms.LinkLabel copyright;
 	}
 }
 

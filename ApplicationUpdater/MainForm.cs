@@ -69,7 +69,7 @@ namespace ChatbotScriptUpdater {
 			try {
 				Configuration = Updater.GetConfiguration ( );
 				InitalizeUI ( );
-				Text = $"{Text} ({Configuration.Name})";
+				
 				if ( !Updater.HasError ) {
 					await Updater.CheckUpdateStatus ( Configuration );
 				}
@@ -79,9 +79,23 @@ namespace ChatbotScriptUpdater {
 		}
 
 		private void InitalizeUI ( ) {
+			if ( !string.IsNullOrWhiteSpace ( Configuration.Name ) ) {
+				Text = $"{Text} ({Configuration.Name})";
+			}
 			this.cancel.Text = Configuration.Interface.CloseButton;
 			this.updateNow.Text = Configuration.Interface.DownloadButton;
 			this.linkRepo.Text = Configuration.Interface.OpenRepositoryLink;
+			if ( !string.IsNullOrWhiteSpace ( Configuration.Repository?.Name ) && !string.IsNullOrWhiteSpace ( Configuration.Repository?.Owner ) ) {
+				this.linkRepo.Enabled = true;
+			} else {
+				this.linkRepo.Enabled = false;
+			}
+			if ( string.IsNullOrWhiteSpace ( Configuration.Website ) ) {
+				this.website.Text = Configuration.Website;
+				this.website.Enabled = true;
+			} else {
+				this.website.Enabled = false;
+			}
 		}
 
 		private void DownloadAsset ( ) {
@@ -292,7 +306,19 @@ namespace ChatbotScriptUpdater {
 		}
 
 		private void LinkRepo_Click ( object sender, EventArgs e ) {
-			OpenRepository ( );
+			if ( !string.IsNullOrWhiteSpace ( Configuration.Repository?.Name ) && !string.IsNullOrWhiteSpace ( Configuration.Repository?.Owner ) ) {
+				OpenRepository ( );
+			}
+		}
+
+		private void Website_LinkClicked ( object sender, LinkLabelLinkClickedEventArgs e ) {
+			if ( !string.IsNullOrWhiteSpace ( Configuration.Website ) ) {
+				System.Diagnostics.Process.Start ( Configuration.Website );
+			}
+		}
+
+		private void Copyright_LinkClicked ( object sender, LinkLabelLinkClickedEventArgs e ) {
+			System.Diagnostics.Process.Start ( "https://github.com/camalot/chatbotscriptupdater" );
 		}
 	}
 }
