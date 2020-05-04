@@ -1,26 +1,19 @@
 {
-	"application": "D:\\Data\\OBS\\apps\\Streamlabs Chatbot\\Streamlabs Chatbot.exe",
-	"path": "D:\\Data\\OBS\\apps\\Streamlabs Chatbot\\Services\\Scripts",
-	"processName":  "Streamlabs Chatbot",
-	"folderName":  "MedalOverlay",
-	"version": "1.0.0-snapshot",
-	"name": "Medal Overlay",
-	"website" :  "http://darthminos.tv",
+	"applications": "D:\\Data\\OBS\\apps\\Streamlabs Chatbot\\Streamlabs Chatbot.exe",
 	"kill": [ "mohttpd" ],
-	"execute": {
-		"before": [
-			{
-				"command": "cmd",
-				"arguments": [ "/c", "del /q /f /s *" ],
-				"workingDirectory": "${PATH}\\${SCRIPT}\\Libs\\",
-				"ignoreExitCode": true,
-				"validExitCodes": [ 0 ]
-			}
-		],
-		"after": []
-	},
+	"processName":  "Streamlabs Chatbot",
+	"folderName": "MedalOverlay",
+	"website": "http://darthminos.tv",
+	"path": "D:\\Data\\OBS\\apps\\Streamlabs Chatbot\\Services\\Scripts",
+	"version": "1.0.51",
+	"requiresRestart": true,
 	"repository": {
 		"owner": "camalot",
-		"name":  "chatbot-medaloverlay"
+		"name": "chatbot-medaloverlay"
+	},
+	"name": "Medal Overlay",
+	"execute": {
+		"before": [],
+		"after": []
 	}
 }

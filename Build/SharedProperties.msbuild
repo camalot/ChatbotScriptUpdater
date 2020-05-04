@@ -10,7 +10,7 @@
 		<Revision>0</Revision>
 		<APPVEYOR Condition=" '$(APPVEYOR)' == '' ">False</APPVEYOR>
 		<APPVEYOR_BUILD_NUMBER Condition=" '$(APPVEYOR_BUILD_NUMBER)' == '' ">0</APPVEYOR_BUILD_NUMBER>
-		<CI_PROJECT_NAME>ApplicationUpater</CI_PROJECT_NAME>
+		<CI_PROJECT_NAME>ApplicationUpdater</CI_PROJECT_NAME>
 	</PropertyGroup>
 	<PropertyGroup  Condition=" '$(APPVEYOR)' == 'True' AND '$(APPVEYOR_BUILD_NUMBER)' != '' ">
 		<CI_BUILD_NUMBER>$(APPVEYOR_BUILD_NUMBER)</CI_BUILD_NUMBER>
