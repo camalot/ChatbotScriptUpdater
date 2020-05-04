@@ -151,7 +151,7 @@ namespace ChatbotScriptUpdater {
 						Directory.Delete ( Path.Combine ( path, "temp" ), true );
 					}
 					ZipFile.ExtractToDirectory ( local, Path.Combine ( path, "temp" ) );
-					MoveDirectory ( Path.Combine ( path, "temp", Configuration.FolderName ), Path.Combine ( dest, Configuration.FolderName ) );
+					MoveDirectory ( Path.Combine ( path, "temp", Configuration.MoveZipRoot ? "" : Configuration.FolderName  ), Path.Combine ( dest, Configuration.FolderName ) );
 					if ( Directory.Exists ( Path.Combine ( path, "temp" ) ) ) {
 						Directory.Delete ( Path.Combine ( path, "temp" ), true );
 					}

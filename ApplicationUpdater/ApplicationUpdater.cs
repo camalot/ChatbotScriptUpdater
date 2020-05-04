@@ -25,7 +25,9 @@ namespace ChatbotScriptUpdater {
 			public string ProcessName { get; set; } = "Streamlabs Chatbot";
 			[JsonProperty ( "application" )]
 			public string Application { get; set; }
+			[JsonProperty ( "moveZipRoot" )]
 
+			public bool MoveZipRoot { get; set; } = false;
 
 			[JsonProperty ( "requiresRestart" )]
 			public bool RequiresRestart { get; set; } = false;
