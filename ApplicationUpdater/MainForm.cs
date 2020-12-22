@@ -197,7 +197,7 @@ namespace ChatbotScriptUpdater {
 
 		private void UpdateNow_Click ( object sender, EventArgs e ) {
 			this.cancel.Enabled = false;
-			var result = MessageBox.Show ( $"This will shutdown {Configuration.ProcessName}, and restart it after update.\n\nDo you want to continue?",
+			var result = MessageBox.Show ( $"This will shutdown {Configuration.ProcessName}{(Configuration.AutoRestartAfterUpdate ? ", and restart it after update" : ". You must restart it manually after update")}.\n\nDo you want to continue?",
 				"Continue?",
 				MessageBoxButtons.YesNo,
 				MessageBoxIcon.Question );
