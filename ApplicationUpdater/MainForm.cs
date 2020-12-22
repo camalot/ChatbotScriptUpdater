@@ -258,7 +258,7 @@ namespace ChatbotScriptUpdater {
 
 					progress.Value = 90;
 
-					if ( Configuration.RequiresRestart ) {
+					if ( Configuration.AutoRestartAfterUpdate ) {
 						progressLabel.Text = $"Restarting {Configuration.ProcessName}";
 						RestartApplicationProcess ( );
 					}

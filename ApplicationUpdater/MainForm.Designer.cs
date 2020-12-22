@@ -121,7 +121,7 @@
 			this.copyright.Size = new System.Drawing.Size(551, 13);
 			this.copyright.TabIndex = 7;
 			this.copyright.TabStop = true;
-			this.copyright.Text = "Application Updater - Copyright © Ryan Conrad 2019-2020";
+			this.copyright.Text = "Application Updater - Copyright © Ryan Conrad 2019-2021";
 			this.copyright.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
 			this.copyright.VisitedLinkColor = System.Drawing.Color.Blue;
 			this.copyright.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.Copyright_LinkClicked);

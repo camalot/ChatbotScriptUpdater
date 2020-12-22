@@ -28,7 +28,8 @@ namespace ChatbotScriptUpdater {
 			[JsonProperty ( "moveZipRoot" )]
 
 			public bool MoveZipRoot { get; set; } = false;
-
+			[JsonProperty("autoRestartAfterUpdate")]
+			public bool AutoRestartAfterUpdate { get; set; } = false;
 			[JsonProperty ( "requiresRestart" )]
 			public bool RequiresRestart { get; set; } = false;
 			[JsonProperty ( "website" )]
