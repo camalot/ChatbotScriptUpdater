@@ -1,20 +1,23 @@
 {
-	"application": "D:\\Development\\projects\\github\\Stic-A-Pic\\dist\\1.0.0-snapshot\\Stic-A-Pic.exe",
-	"path": "D:\\Development\\projects\\github\\Stic-A-Pic\\dist",
-	"requiresRestart": true,
-	"folderName": "1.0.0-snapshot",
-	"version": "1.0.0",
-	"processName": "Stic-A-Pic",
-	"moveZipRoot":  true,
+	"application": "D:\\Data\\OBS\\apps\\Stic-A-Pic\\Stic-A-Pic.exe",
+	"path": "D:\\Data\\OBS\\apps\\",
+	"folderName": "Stic-A-Pic",
+	"version": "1.0.0-snapshot",
 	"name": "Stic-A-Pic",
 	"website": "http://darthminos.tv",
+	"processName": "Stic-A-Pic",
+	"requiresRestart": true,
 	"kill": [],
 	"execute": {
-		"before": [],
+		"before": [
+			{
+			}
+		],
 		"after": []
 	},
 	"repository": {
 		"owner": "camalot",
-		"name": "stic-a-pic"
+		"name": "stic-a-pic",
+		"assetMatch": "stic-a-pic\\.(.*?)\\.zip"
 	}
 }

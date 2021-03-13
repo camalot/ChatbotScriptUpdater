@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using ChatbotScriptUpdater.Exceptions;
 using Newtonsoft.Json;
@@ -83,6 +84,8 @@ namespace ChatbotScriptUpdater {
 			public string Name { get; set; }
 			[JsonProperty ( "owner" )]
 			public string Owner { get; set; }
+			[JsonProperty ( "assetMatch" )]
+			public string AssetMatch { get; set; } = null;
 		}
 
 		public class UpdateStatusEventArgs {
@@ -161,6 +164,7 @@ namespace ChatbotScriptUpdater {
 				BeginUpdateCheck?.Invoke ( this, new EventArgs ( ) );
 				var release = await GetLatestRelease ( config );
 				var userVersion = SemVersion.Parse ( config.Version );
+				
 				var result = new Github.UpdateCheck ( ) {
 					HasUpdate = false,
 					UserVersion = userVersion,
@@ -168,13 +172,25 @@ namespace ChatbotScriptUpdater {
 				};
 				if ( release != null && release.Assets?.Count ( ) > 0 ) {
 					var releaseVersion = SemVersion.Parse ( release.TagName );
-					
-					result = new Github.UpdateCheck ( ) {
-						HasUpdate = userVersion < releaseVersion,
-						LatestVersion = releaseVersion,
-						UserVersion = userVersion,
-						Asset = release.Assets.First ( )
-					};
+
+					var asset = release.Assets.First ( );
+					if (!string.IsNullOrWhiteSpace(config.Repository.AssetMatch)) {
+						var regex = new Regex ( config.Repository.AssetMatch, RegexOptions.IgnoreCase | RegexOptions.Singleline | RegexOptions.IgnorePatternWhitespace | RegexOptions.Compiled);
+						asset = release.Assets.Where ( a => regex.IsMatch ( a.Name ) ).FirstOrDefault ( );
+					}
+					if ( asset == null ) {
+						// no asset matches
+						HasError = true;
+						Error?.Invoke ( this, new ErrorEventArgs ( new NoMatchingAssetsException ( ) ) );
+						return result;
+					} else {
+						result = new Github.UpdateCheck ( ) {
+							HasUpdate = userVersion < releaseVersion,
+							LatestVersion = releaseVersion,
+							UserVersion = userVersion,
+							Asset = asset
+						};
+					}
 				} else {
 					HasError = true;
 					Error?.Invoke ( this, new ErrorEventArgs ( new UnableToLoadReleaseException ( ) ) );
