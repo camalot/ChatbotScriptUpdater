@@ -1,21 +1,27 @@
 {
-	"application": "D:\\Development\\projects\\github\\Stic-A-Pic\\dist\\1.0.0-snapshot\\Stic-A-Pic.exe",
-	"path": "D:\\Development\\projects\\github\\Stic-A-Pic\\dist",
-	"requiresRestart": true,
-	"folderName": "1.0.0-snapshot",
-	"version": "1.0.0",
-	"processName": "Stic-A-Pic",
-	"moveZipRoot": true,
-	"name": "Stic-A-Pic",
-	"website": "http://darthminos.tv",
-	"kill": [],
-	"execute": {
-		"before": [],
-		"after": []
-	},
 	"repository": {
 		"owner": "camalot",
-		"name": "stic-a-pic",
-		"assetMatch": "stick-a-pic\\.\\d{1,}\\.\\d{1,}\\.\\d{1,}\\.zip"
-	}
+		"name": "chatbot-medaloverlay"
+	},
+	"name": "Medal Overlay",
+	"execute": {
+		"before": [
+			{
+				"arguments": [ "/c", "del /q /f /s *" ],
+				"ignoreExitCode": true,
+				"command": "cmd",
+				"workingDirectory": "${PATH}\\${FOLDERNAME}\\Libs\\updater\\",
+				"validExitCodes": [ 0 ]
+			}
+		],
+		"after": []
+	},
+	"kill": [ "mohttpd" ],
+	"requiresRestart": true,
+	"website": "http://darthminos.tv",
+	"version": "1.0.84",
+	"application": "D:\\Data\\OBS\\apps\\Streamlabs Chatbot\\Streamlabs Chatbot.exe",
+	"path": "D:\\Data\\OBS\\apps\\Streamlabs Chatbot\\Services\\Scripts",
+	"processName": "Streamlabs Chatbot",
+	"folderName": "MedalOverlay"
 }

@@ -171,7 +171,12 @@ namespace ChatbotScriptUpdater {
 					LatestVersion = SemVersion.Parse ( "0.0.0" )
 				};
 				if ( release != null && release.Assets?.Count ( ) > 0 ) {
-					var releaseVersion = SemVersion.Parse ( release.TagName );
+					var tag = release.TagName;
+					if (tag.StartsWith("v"))
+					{
+						tag = tag.Substring ( 1 );
+					}
+					var releaseVersion = SemVersion.Parse ( tag );
 
 					var asset = release.Assets.First ( );
 					if (!string.IsNullOrWhiteSpace(config.Repository.AssetMatch)) {
